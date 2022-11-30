@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import re
+import os
 import flask
+import signal
 import yaml
 from flask import request, jsonify, Response
 from functools import lru_cache
@@ -24,6 +26,12 @@ fetcher = Fetcher(app.config['DATA'])
 
 # setup VCF readers
 vcf_handlers = VCFs(app.config['DATA'])
+
+''' kills the server (docker would restart it) '''
+@app.route('/kill', methods=['GET'])
+def kill():
+    os.kill(os.getpid(), signal.SIGTERM)
+    return 'Server shutting down...'
 
 ''' returns available VCFs '''
 @app.route('/vcf', methods=['GET'])
