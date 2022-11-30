@@ -1,0 +1,20 @@
+---
+DEBUG: true
+UPLOAD_FOLDER: data
+DATA:
+  - name: ClinVar GRCh38
+    id: clinvar_grch38
+    directory: data/clinvar_grch38
+    source:
+      vcf: https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz
+      tbi:  https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz.tbi
+      md5: https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/clinvar.vcf.gz.md5 
+  - name: ClinVar GRCh37
+    id: clinvar_grch37
+    directory: data/clinvar_grch37
+    source:
+      vcf: https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz
+      tbi:  https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz.tbi
+      md5: https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh37/clinvar.vcf.gz.md5 
+      
+   
