@@ -43,9 +43,8 @@ class VCFs(dict):
         if vcf:
             vars = vcf.fetch(contig=chrom, start=pos-1, end=pos+len(ref)-1)
             if vars:
-                print(vars)
                 for record in vars:
                     if record.chrom == chrom and record.pos == int(pos) \
-                        and record.ref == ref and record.alts[0] == alt:
+                        and record.ref == ref and record.alts and record.alts[0] == alt:
                         return record
             return None

@@ -8,5 +8,5 @@ COPY requirements.txt .
 RUN pip3 install cython
 RUN pip3 install -r requirements.txt
 COPY . .
-EXPOSE 3003
+EXPOSE 5000
 CMD ["gunicorn","app:app"]

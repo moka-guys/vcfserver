@@ -22,9 +22,11 @@ with open('config.yaml') as fh:
         raise
 
 # setup file fetcher
+print('Starting VCF fetchers...')
 fetcher = Fetcher(app.config['DATA'])
 
 # setup VCF readers
+print('Starting VCF request handlers...')
 vcf_handlers = VCFs(app.config['DATA'])
 
 ''' kills the server (docker would restart it) '''
@@ -63,7 +65,7 @@ def vcf(id):
         except ValueError:
             return None
         record = vcf_handlers.fetch_position(id, chrom, int(pos), ref, alt)
-        if record.chrom == chrom and record.pos == int(pos) and  record.ref == ref and record.alts[0] == alt:
+        if record is not None and record.chrom == chrom and record.pos == int(pos) and  record.ref == ref and record.alts[0] == alt:
             if format == 'cellbase_clinvar':
                 return jsonify({
                     'accession': record.id,
@@ -89,6 +91,6 @@ def vcf(id):
 
 
 if __name__=="__main__":
-    app.run(host="0.0.0.0", port=3003)
+    app.run(host="0.0.0.0", port=5000)
 
 
