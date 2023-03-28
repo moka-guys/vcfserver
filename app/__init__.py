@@ -4,6 +4,7 @@ import os
 import flask
 import signal
 import yaml
+import logging
 from flask import request, jsonify, Response
 from functools import lru_cache
 from collections import defaultdict
@@ -21,12 +22,18 @@ with open('config.yaml') as fh:
         print(err)
         raise
 
+# setup logging to gunicorn
+if __name__ != '__main__':
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+
 # setup file fetcher
-print('Starting VCF fetchers...')
+app.logger.info('Starting VCF fetchers...')
 fetcher = Fetcher(app.config['DATA'])
 
 # setup VCF readers
-print('Starting VCF request handlers...')
+app.logger.info('Starting VCF request handlers...')
 vcf_handlers = VCFs(app.config['DATA'])
 
 ''' kills the server (docker would restart it) '''
@@ -40,7 +47,7 @@ def kill():
 def vcfs():
     search = request.args.get('search','')
     items = list(filter(lambda x: re.match(search, x['id']) if search else True, vcf_handlers.ids()))
-    print(items)
+    app.logger.debug(f'Requested VCFs {", ".join(items)}')
     return jsonify(items)
 
 ''' returns vcf info'''
@@ -57,7 +64,7 @@ def vcf_info(id):
 def vcf(id):
     variant = request.args.get('variant')
     format = request.args.get('format')
-    print(variant)
+    app.logger.debug(f'Requested variant {variant} from {id}')
     if vcf_handlers[id]:
         print(f'Query {id}')
         try:

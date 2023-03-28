@@ -2,6 +2,10 @@ import urllib.request
 import urllib
 import os
 import hashlib
+import logging
+
+logger = logging.getLogger(__name__.split('.')[0]) # logger name is __name__ by default (passed to Flask contructor)
+
 
 class RemoteFile(object):
     '''
@@ -32,6 +36,7 @@ class RemoteFile(object):
         '''
         returns local file path
         '''
+        logger.debug(f'Downloading {self.target} from {self.remote}')
         return urllib.request.urlretrieve(self.remote, self.target)
 
     def md5sum(self):
@@ -65,13 +70,13 @@ class Fetcher:
             tbi_file = RemoteFile(cfg['source']['tbi'], cfg['directory'])
             current_version = md5_file.check_version()
             if not current_version or not vcf_file.check_version() or not tbi_file.check_version():
-                print('Downloading new version of', cfg['id'])
+                logger.info('Downloading new version of', cfg['id'])
                 md5_file.download()
                 vcf_file.download()
                 tbi_file.download()
                 current_version = md5_file.check_version()
             else:
-                print(f'Using cached version of {cfg["id"]} ({current_version.decode("utf-8")})')
+                logger.info(f'Using cached version of {cfg["id"]} ({current_version.decode("utf-8")})')
             # MD5 check
             vcf_md5 = vcf_file.md5sum()
             assert vcf_md5 == current_version.decode('utf-8')
