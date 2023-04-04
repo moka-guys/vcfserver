@@ -9,7 +9,11 @@ logger = logging.getLogger(__name__.split('.')[0]) # logger name is __name__ by 
 
 class RemoteFile(object):
     '''
-    remote file
+    remote file object
+
+    download() downloads file if local file is not up to date
+    checks if local file is up to date
+
     '''
     def __init__(self, remote, target):
         self.remote = remote
@@ -17,6 +21,16 @@ class RemoteFile(object):
         return
 
     def check_version(self, length=32):
+        '''
+        checks if local file is up to date
+
+        args:
+            length: number of bytes to compare for versioning
+                    (clinvar VCF files encode date in header)
+        
+        returns:
+            version string (if current)
+        '''
         # read from local
         try:
             with open(self.target,'rb') as fh:
@@ -34,7 +48,10 @@ class RemoteFile(object):
 
     def download(self):
         '''
-        returns local file path
+        Downloads the resource
+
+        returns:
+            local file path
         '''
         logger.debug(f'Downloading {self.target} from {self.remote}')
         return urllib.request.urlretrieve(self.remote, self.target)
@@ -53,6 +70,8 @@ class RemoteFile(object):
 class Fetcher:
     '''
     Data fetching class
+
+    Downloads VCFs and TBI files from remote sources ensuring version updates
     '''
     def __init__(self, configs):
         self.configs = configs

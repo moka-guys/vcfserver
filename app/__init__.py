@@ -36,32 +36,36 @@ fetcher = Fetcher(app.config['DATA'])
 app.logger.info('Starting VCF request handlers...')
 vcf_handlers = VCFs(app.config['DATA'])
 
-''' kills the server (docker would restart it) '''
 @app.route('/kill', methods=['GET'])
 def kill():
+    '''
+    kills the server/worker
+    
+    NB: gunicorn would restart the worker and update VCFs if necessary
+    '''
     os.kill(os.getpid(), signal.SIGTERM)
     return 'Server shutting down...'
 
-''' returns available VCFs '''
 @app.route('/vcf', methods=['GET'])
 def vcfs():
+    ''' returns available VCFs '''
     search = request.args.get('search','')
     items = list(filter(lambda x: re.match(search, x['id']) if search else True, vcf_handlers.ids()))
     app.logger.debug(f'Requested VCFs {", ".join(items)}')
     return jsonify(items)
 
-''' returns vcf info'''
 @app.route('/vcf/<string:id>/info', methods=['GET'])
 def vcf_info(id):
+    ''' returns vcf info'''
     try:
         return jsonify(vcf_handlers.info(id))
     except Exception as err:
         return Response(status=404)
 
 
-''' returns vcf record '''
 @app.route('/vcf/<string:id>', methods=['GET'])
 def vcf(id):
+    '''returns a vcf record as json'''
     variant = request.args.get('variant')
     format = request.args.get('format')
     app.logger.debug(f'Requested variant {variant} from {id}')
