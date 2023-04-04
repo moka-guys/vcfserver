@@ -40,7 +40,7 @@ vcf_handlers = VCFs(app.config['DATA'])
 def kill():
     '''
     kills the server/worker
-    
+
     NB: gunicorn would restart the worker and update VCFs if necessary
     '''
     os.kill(os.getpid(), signal.SIGTERM)
@@ -102,6 +102,5 @@ def vcf(id):
 
 
 if __name__=="__main__":
-    app.run(host="0.0.0.0", port=5000)
-
+    app.run(host="0.0.0.0", port=3003)
 
