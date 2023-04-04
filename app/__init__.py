@@ -70,7 +70,6 @@ def vcf(id):
     format = request.args.get('format')
     app.logger.debug(f'Requested variant {variant} from {id}')
     if vcf_handlers[id]:
-        print(f'Query {id}')
         try:
             chrom, pos, ref, alt = variant.split(':')
         except ValueError:
