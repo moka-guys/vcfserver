@@ -1,6 +1,11 @@
 # VCF server
 
-Returns INFO/FORMAT Field data via simple HTTP API. Automatic setup and update function.
+Returns INFO/FORMAT Field data via simple HTTP API with automatic setup and source data updates.
+
+It is configured to automatically download and serve the current ClinVar VCF files. 
+
+The current use case it to serve the most up-to-date ClinVar classification to the ESMO germline focussed tumour analysis pipeline.
+
 
 ## Configuration
 
